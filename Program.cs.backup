@@ -1,0 +1,141 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using visionguard.Data;
+using visionguard.Services;
+
+namespace visionguard
+{
+    public class Program
+    {
+        public static async Task Main(string[] args)
+        {
+            // QuestPDF License Configuration (Community)
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+            var builder = WebApplication.CreateBuilder(args);
+
+            // ============================================================
+            // DEPENDENCY INJECTION & MIDDLEWARE CONFIGURATION
+            // ============================================================
+            
+            // Add services to the container.
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                });
+            
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            // ============================================================
+            // AUTHENTICATION & AUTHORIZATION
+            // ============================================================
+            var jwtSecret = "VisionGuardSecretKeyForDevelopment2026VisionGuardSecretKeyForDev";
+            var key = Encoding.ASCII.GetBytes(jwtSecret);
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            builder.Services.AddAuthorizationBuilder()
+                .AddPolicy("SupervisorOnly", policy => 
+                    policy.RequireRole("SAFETY_SUPERVISOR"))
+                .AddPolicy("HROnly", policy => 
+                    policy.RequireRole("HR"))
+                .AddPolicy("AllAuthenticated", policy => 
+                    policy.RequireAuthenticatedUser());
+
+            // ============================================================
+            // DATABASE & ENTITY FRAMEWORK
+            // ============================================================
+            builder.Services.AddDbContext<VisionGuardDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // ============================================================
+            // BUSINESS SERVICES
+            // ============================================================
+            builder.Services.AddScoped<IViolationService, ViolationService>();
+            builder.Services.AddSingleton(new JwtTokenGenerator(jwtSecret));
+
+            // ============================================================
+            // CORS (Cross-Origin Resource Sharing)
+            // ============================================================
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.SetIsOriginAllowed(origin =>
+                    {
+                        var uri = new Uri(origin);
+                        return uri.Host == "localhost"
+                            || uri.Host == "127.0.0.1"
+                            || uri.Host.EndsWith("ngrok-free.app")
+                            || uri.Host.EndsWith("ngrok.app");
+                    })
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
+
+
+            var app = builder.Build();
+
+            // ============================================================
+            // DATABASE SEEDING
+            // ============================================================
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<VisionGuardDbContext>();
+                await DbSeeder.SeedAsync(context);
+            }
+
+            // ============================================================
+            // HTTP REQUEST PIPELINE
+            // ============================================================
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            // ================= PIPELINE =================
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            // ?? „Â„
+            app.UseRouting();
+
+            app.UseCors("AllowFrontend");
+
+            // ·Ê Â ” Œœ„ ngrok Œ·Ì HTTPS „ﬁ›Ê· „ƒﬁ «
+            // app.UseHttpsRedirection();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.MapControllers();
+
+            app.Run();
+
+        }
+    }
+}
