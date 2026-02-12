@@ -9,3 +9,4 @@ wwwroot\uploads\cecfdf6e-5513-4d0c-8a83-ecb8af5565a4.png
 wwwroot\uploads\d6f47ae1-25ab-4944-90ca-eb57946a8a55.jpg
 wwwroot\uploads\f7423f4a-a941-441c-a846-2abaa011f0bf.jpg
 wwwroot\uploads\ff81114f-f20f-412f-954e-b2f93b06451a.jpg
+wwwroot\uploads\75ad2d9f-ac57-4720-9516-67bdedffe21d.png

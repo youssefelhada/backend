@@ -1,148 +1,157 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models; // مهم عشان Swagger
 using System.Text;
 using visionguard.Data;
 using visionguard.Services;
+// using visionguard.Services; // تأكد إن الـ Namespace ده موجود عندك
 
 namespace visionguard
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args) // خليتها void Main عشان التبسيط، أو async Task Main عادي
         {
-            // QuestPDF License Configuration (Community)
+            // QuestPDF License Configuration
             QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
             var builder = WebApplication.CreateBuilder(args);
 
             // ============================================================
-            // DEPENDENCY INJECTION & MIDDLEWARE CONFIGURATION
+            // 1. SERVICES CONFIGURATION (قبل Build)
             // ============================================================
-            
-            // Add services to the container.
+
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
                 });
-            
+
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            // ✅ تصحيح Swagger: إعداد الـ JWT Button هنا
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "VisionGuard API", Version = "v1" });
+
+                // تعريف نظام الحماية (Bearer Token)
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter your valid token in the text input below.\r\nExample: eyJhbGciOiJIUzI1NiIs..."
+                });
+
+                // تفعيل القفل على كل الـ Endpoints
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+            });
 
             // ============================================================
             // AUTHENTICATION & AUTHORIZATION
             // ============================================================
+            // لازم تكون معرف jwtSecret فوق قبل السطر ده
             var jwtSecret = "VisionGuardSecretKeyForDevelopment2026VisionGuardSecretKeyForDev";
+
+            // 👇 ده السطر اللي ناقص، لازم تفعله
+            builder.Services.AddSingleton(new JwtTokenGenerator(jwtSecret));
+           // var jwtSecret = "VisionGuardSecretKeyForDevelopment2026VisionGuardSecretKeyForDev";
             var key = Encoding.ASCII.GetBytes(jwtSecret);
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromSeconds(60)
-                    };
-                    // Critical for ngrok and cross-origin requests
-                    options.SaveToken = true;
-                    options.IncludeErrorDetails = true;
-                });
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero // عشان التوكن ينتهي في ميعاده بالظبط
+                };
+            });
 
-            builder.Services.AddAuthorizationBuilder()
-                .AddPolicy("SupervisorOnly", policy => 
-                    policy.RequireRole("SAFETY_SUPERVISOR"))
-                .AddPolicy("HROnly", policy => 
-                    policy.RequireRole("HR"))
-                .AddPolicy("AllAuthenticated", policy => 
-                    policy.RequireAuthenticatedUser());
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SupervisorOnly", policy => policy.RequireRole("SAFETY_SUPERVISOR"));
+                options.AddPolicy("HROnly", policy => policy.RequireRole("HR"));
+            });
 
             // ============================================================
-            // DATABASE & ENTITY FRAMEWORK
+            // DATABASE
             // ============================================================
             builder.Services.AddDbContext<VisionGuardDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // ============================================================
-            // BUSINESS SERVICES
+            // BUSINESS SERVICES (تأكد إن الكلاسات دي موجودة)
             // ============================================================
-            builder.Services.AddScoped<IViolationService, ViolationService>();
-            builder.Services.AddSingleton(new JwtTokenGenerator(jwtSecret));
-
-            // Worker Module Services
-            builder.Services.AddScoped<visionguard.Repositories.IWorkerRepository, visionguard.Repositories.WorkerRepository>();
-            builder.Services.AddScoped<IWorkerService, WorkerService>();
-            builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+            // builder.Services.AddScoped<IViolationService, ViolationService>();
+            // builder.Services.AddSingleton(new JwtTokenGenerator(jwtSecret));
+            // builder.Services.AddScoped<visionguard.Repositories.IWorkerRepository, visionguard.Repositories.WorkerRepository>();
+            // builder.Services.AddScoped<IWorkerService, WorkerService>();
+            // builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 
             // ============================================================
-            // CORS (Cross-Origin Resource Sharing)
+            // CORS
             // ============================================================
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend", policy =>
                 {
-                    policy.SetIsOriginAllowed(origin =>
-                    {
-                        var uri = new Uri(origin);
-                        return uri.Host == "localhost"
-                            || uri.Host == "127.0.0.1"
-                            || uri.Host.EndsWith("ngrok-free.app")
-                            || uri.Host.EndsWith("ngrok.app");
-                    })
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
+                    policy.AllowAnyOrigin() // للتبسيط أثناء التطوير
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
                 });
             });
 
 
+            // 🛑 بناء التطبيق (Build)
             var app = builder.Build();
 
             // ============================================================
-            // DATABASE SEEDING
-            // ============================================================
-            using (var scope = app.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<VisionGuardDbContext>();
-                await DbSeeder.SeedAsync(context);
-            }
-
-            // ============================================================
-            // HTTP REQUEST PIPELINE
+            // 2. HTTP REQUEST PIPELINE (بعد Build)
             // ============================================================
 
-/* if (app.Environment.IsDevelopment())
- {
-     app.UseSwagger();
-     app.UseSwaggerUI();
- }*/
-  app.UseSwagger();
-app.UseSwaggerUI();
-// Enable static files middleware for serving uploaded images
-app.UseStaticFiles();
+            // Swagger شغال في كل البيئات عشان التست
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-// Enable routing first
-app.UseRouting();
+            app.UseStaticFiles();
+            app.UseRouting();
 
-// CORS must come before authentication
-app.UseCors("AllowFrontend");
+            app.UseCors("AllowFrontend");
 
-// HTTPS redirection (disabled for ngrok)
-// app.UseHttpsRedirection();
+            app.UseAuthentication(); // 1. مين أنت؟
+            app.UseAuthorization();  // 2. مسموحلك بإيه؟
 
-// Authentication and Authorization
-app.UseAuthentication();
-app.UseAuthorization();
+            app.MapControllers();
 
-// Map controllers
-app.MapControllers();
-
-app.Run();
-
-}
-}
+            app.Run();
+        }
+    }
 }

@@ -190,3 +190,4 @@ D:\FinalVisionGuard\backend\obj\Release\net8.0\refint\visionguard.dll
 D:\FinalVisionGuard\backend\obj\Release\net8.0\visionguard.pdb
 D:\FinalVisionGuard\backend\obj\Release\net8.0\visionguard.genruntimeconfig.cache
 D:\FinalVisionGuard\backend\obj\Release\net8.0\ref\visionguard.dll
+D:\FinalVisionGuard\backend\obj\Release\net8.0\visionguard.sourcelink.json

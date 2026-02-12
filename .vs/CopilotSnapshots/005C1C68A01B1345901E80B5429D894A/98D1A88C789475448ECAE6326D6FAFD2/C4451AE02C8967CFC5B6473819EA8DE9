@@ -1,0 +1,18 @@
+﻿{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=db41011.databaseasp.net; Database=db41011; User Id=db41011; Password=3c?ZH-6y8Yr#; Encrypt=False; MultipleActiveResultSets=True;;"
+  },
+  "JwtSettings": {
+    "Secret": "Supers3cretKeyForVisionGuardProject123!",
+    "Issuer": "VisionGuardApi",
+    "Audience": "VisionGuardClient",
+    "ExpirationInMinutes": 60
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}

@@ -1,0 +1,18 @@
+﻿{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=VisionGuardDb;Trusted_Connection=True;MultipleActiveResultSets=true;"
+  },
+  "JwtSettings": {
+    "Secret": "Supers3cretKeyForVisionGuardProject123!",
+    "Issuer": "VisionGuardApi",
+    "Audience": "VisionGuardClient",
+    "ExpirationInMinutes": 60
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}

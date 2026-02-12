@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("visionguard")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+790a1161f5306141ebf53269fc37726e9fc2f7b2")]
 [assembly: System.Reflection.AssemblyProductAttribute("visionguard")]
 [assembly: System.Reflection.AssemblyTitleAttribute("visionguard")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
