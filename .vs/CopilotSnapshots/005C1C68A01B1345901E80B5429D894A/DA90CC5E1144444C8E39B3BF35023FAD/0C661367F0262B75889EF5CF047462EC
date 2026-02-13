@@ -1,0 +1,159 @@
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models; // مهم عشان Swagger
+using System.Text;
+using visionguard.Data;
+using visionguard.Services;
+// using visionguard.Services; // تأكد إن الـ Namespace ده موجود عندك
+
+namespace visionguard
+{
+    public class Program
+    {
+        public static void Main(string[] args) // خليتها void Main عشان التبسيط، أو async Task Main عادي
+        {
+            // QuestPDF License Configuration
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+            var builder = WebApplication.CreateBuilder(args);
+
+            // ============================================================
+            // 1. SERVICES CONFIGURATION (قبل Build)
+            // ============================================================
+
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                });
+
+            builder.Services.AddEndpointsApiExplorer();
+
+            // ✅ تصحيح Swagger: إعداد الـ JWT Button هنا
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "VisionGuard API", Version = "v1" });
+
+                // تعريف نظام الحماية (Bearer Token)
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter your valid token in the text input below.\r\nExample: eyJhbGciOiJIUzI1NiIs..."
+                });
+
+                // تفعيل القفل على كل الـ Endpoints
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+            });
+
+            // ============================================================
+            // AUTHENTICATION & AUTHORIZATION
+            // ============================================================
+            // لازم تكون معرف jwtSecret فوق قبل السطر ده
+            var jwtSecret = "VisionGuardSecretKeyForDevelopment2026VisionGuardSecretKeyForDev";
+
+            // 👇 ده السطر اللي ناقص، لازم تفعله
+            builder.Services.AddSingleton(new JwtTokenGenerator(jwtSecret));
+           // var jwtSecret = "VisionGuardSecretKeyForDevelopment2026VisionGuardSecretKeyForDev";
+            var key = Encoding.ASCII.GetBytes(jwtSecret);
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero // عشان التوكن ينتهي في ميعاده بالظبط
+                };
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SupervisorOnly", policy => policy.RequireRole("SAFETY_SUPERVISOR"));
+                options.AddPolicy("HROnly", policy => policy.RequireRole("HR"));
+                options.AddPolicy("EngineerOnly", policy => policy.RequireRole("SAFETY_ENGINEER"));
+                options.AddPolicy("AllAuthenticated", policy => policy.RequireAuthenticatedUser());
+            });
+
+            // ============================================================
+            // DATABASE
+            // ============================================================
+            builder.Services.AddDbContext<VisionGuardDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // ============================================================
+            // BUSINESS SERVICES (تأكد إن الكلاسات دي موجودة)
+            // ============================================================
+            // builder.Services.AddScoped<IViolationService, ViolationService>();
+            // builder.Services.AddSingleton(new JwtTokenGenerator(jwtSecret));
+            // builder.Services.AddScoped<visionguard.Repositories.IWorkerRepository, visionguard.Repositories.WorkerRepository>();
+            // builder.Services.AddScoped<IWorkerService, WorkerService>();
+            // builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+
+            // ============================================================
+            // CORS
+            // ============================================================
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.AllowAnyOrigin() // للتبسيط أثناء التطوير
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
+
+            // 🛑 بناء التطبيق (Build)
+            var app = builder.Build();
+
+            // ============================================================
+            // 2. HTTP REQUEST PIPELINE (بعد Build)
+            // ============================================================
+
+            // Swagger شغال في كل البيئات عشان التست
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
+            app.UseStaticFiles();
+            app.UseRouting();
+
+            app.UseCors("AllowFrontend");
+
+            app.UseAuthentication(); // 1. مين أنت؟
+            app.UseAuthorization();  // 2. مسموحلك بإيه؟
+
+            app.MapControllers();
+
+            app.Run();
+        }
+    }
+}

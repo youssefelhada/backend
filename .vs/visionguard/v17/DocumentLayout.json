@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|d:\\finalvisionguard\\backend\\data\\dbseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|solutionrelative:data\\dbseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|d:\\finalvisionguard\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -25,6 +29,30 @@
     {
       "AbsoluteMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|d:\\finalvisionguard\\backend\\quick_start_guide.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|",
       "RelativeMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|solutionrelative:quick_start_guide.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|d:\\finalvisionguard\\backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|d:\\finalvisionguard\\backend\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|solutionrelative:dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|d:\\finalvisionguard\\backend\\safety_engineer_implementation.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|",
+      "RelativeMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|solutionrelative:safety_engineer_implementation.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|d:\\finalvisionguard\\backend\\safety_engineer_quick_reference.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|",
+      "RelativeMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|solutionrelative:safety_engineer_quick_reference.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|d:\\finalvisionguard\\backend\\implementation_summary.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|",
+      "RelativeMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|solutionrelative:implementation_summary.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|d:\\finalvisionguard\\backend\\visual_summary.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|",
+      "RelativeMoniker": "D:0:0:{0A26A3A7-CDCC-4E47-B6A2-C68F4DFEF3BD}|visionguard.csproj|solutionrelative:visual_summary.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +62,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 13,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,7 +74,91 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 12,
+              "Title": "VISUAL_SUMMARY.md",
+              "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\VISUAL_SUMMARY.md",
+              "RelativeDocumentMoniker": "VISUAL_SUMMARY.md",
+              "ToolTip": "D:\\FinalVisionGuard\\backend\\VISUAL_SUMMARY.md",
+              "RelativeToolTip": "VISUAL_SUMMARY.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-02-13T00:04:47.089Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IMPLEMENTATION_SUMMARY.md",
+              "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\IMPLEMENTATION_SUMMARY.md",
+              "RelativeDocumentMoniker": "IMPLEMENTATION_SUMMARY.md",
+              "ToolTip": "D:\\FinalVisionGuard\\backend\\IMPLEMENTATION_SUMMARY.md",
+              "RelativeToolTip": "IMPLEMENTATION_SUMMARY.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-02-13T00:04:21.922Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "SAFETY_ENGINEER_QUICK_REFERENCE.md",
+              "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\SAFETY_ENGINEER_QUICK_REFERENCE.md",
+              "RelativeDocumentMoniker": "SAFETY_ENGINEER_QUICK_REFERENCE.md",
+              "ToolTip": "D:\\FinalVisionGuard\\backend\\SAFETY_ENGINEER_QUICK_REFERENCE.md",
+              "RelativeToolTip": "SAFETY_ENGINEER_QUICK_REFERENCE.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-02-13T00:04:08.418Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SAFETY_ENGINEER_IMPLEMENTATION.md",
+              "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\SAFETY_ENGINEER_IMPLEMENTATION.md",
+              "RelativeDocumentMoniker": "SAFETY_ENGINEER_IMPLEMENTATION.md",
+              "ToolTip": "D:\\FinalVisionGuard\\backend\\SAFETY_ENGINEER_IMPLEMENTATION.md",
+              "RelativeToolTip": "SAFETY_ENGINEER_IMPLEMENTATION.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFMBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-02-13T00:03:59.214Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UserDto.cs",
+              "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\DTOs\\UserDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\UserDto.cs",
+              "ToolTip": "D:\\FinalVisionGuard\\backend\\DTOs\\UserDto.cs",
+              "RelativeToolTip": "DTOs\\UserDto.cs",
+              "ViewState": "AgIAADEAAAAAAAAAAMBUwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-13T00:03:10.773Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DbSeeder.cs",
+              "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\Data\\DbSeeder.cs",
+              "RelativeDocumentMoniker": "Data\\DbSeeder.cs",
+              "ToolTip": "D:\\FinalVisionGuard\\backend\\Data\\DbSeeder.cs",
+              "RelativeToolTip": "Data\\DbSeeder.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-13T00:02:40.189Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "D:\\FinalVisionGuard\\backend\\Models\\User.cs",
+              "RelativeToolTip": "Models\\User.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAABRwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-13T00:02:27.116Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "QUICK_START_GUIDE.md",
               "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\QUICK_START_GUIDE.md",
               "RelativeDocumentMoniker": "QUICK_START_GUIDE.md",
@@ -58,7 +170,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "STARTUP_ERROR_FIXES.md",
               "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\STARTUP_ERROR_FIXES.md",
               "RelativeDocumentMoniker": "STARTUP_ERROR_FIXES.md",
@@ -70,7 +182,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "RUNNING_THE_PROJECT.md",
               "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\RUNNING_THE_PROJECT.md",
               "RelativeDocumentMoniker": "RUNNING_THE_PROJECT.md",
@@ -82,7 +194,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "TOKEN_REQUIREMENTS_ALL_ENDPOINTS.md",
               "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\TOKEN_REQUIREMENTS_ALL_ENDPOINTS.md",
               "RelativeDocumentMoniker": "TOKEN_REQUIREMENTS_ALL_ENDPOINTS.md",
@@ -100,23 +212,22 @@
               "RelativeDocumentMoniker": "appsettings.json",
               "ToolTip": "D:\\FinalVisionGuard\\backend\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAACiAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-02-11T18:38:02.867Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\FinalVisionGuard\\backend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\FinalVisionGuard\\backend\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEoAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAJsAAAAAAAAAAABRwEoAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-11T14:08:26.143Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-11T14:08:26.143Z"
             }
           ]
         }

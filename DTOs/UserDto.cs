@@ -13,7 +13,7 @@ namespace visionguard.DTOs
         public string Email { get; set; } = string.Empty;
         public string EmployeeId { get; set; } = string.Empty;
         public string Department { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty;  // "SAFETY_SUPERVISOR" or "HR"
+        public string Role { get; set; } = string.Empty;  // "SAFETY_SUPERVISOR", "HR", or "SAFETY_ENGINEER"
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? LastLoginAt { get; set; }
@@ -21,7 +21,8 @@ namespace visionguard.DTOs
 
     /// <summary>
     /// REQUEST: Create new system user
-    /// Supervisor creates new accounts for team members
+    /// Mobile app admin creates new accounts with different roles
+    /// Roles: SAFETY_SUPERVISOR (admin), HR (reports), SAFETY_ENGINEER (field engineer)
     /// </summary>
     public class CreateUserRequest
     {
@@ -31,13 +32,13 @@ namespace visionguard.DTOs
         public string LastName { get; set; } = string.Empty;
         public string EmployeeId { get; set; } = string.Empty;
         public string Department { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty;  // "SAFETY_SUPERVISOR" or "HR"
+        public string Role { get; set; } = string.Empty;  // "SAFETY_SUPERVISOR", "HR", or "SAFETY_ENGINEER"
         public string Password { get; set; } = string.Empty;
     }
 
     /// <summary>
     /// REQUEST: Update user information
-    /// Supervisor can update user details
+    /// Supervisor/Admin can update user details and role
     /// </summary>
     public class UpdateUserRequest
     {
@@ -45,7 +46,7 @@ namespace visionguard.DTOs
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? Department { get; set; }
-        public string? Role { get; set; }
+        public string? Role { get; set; }  // "SAFETY_SUPERVISOR", "HR", or "SAFETY_ENGINEER"
         public bool? IsActive { get; set; }
     }
 }

@@ -31,6 +31,7 @@ namespace visionguard.Models
     public enum UserRole
     {
         SAFETY_SUPERVISOR,
-        HR
+        HR,
+        SAFETY_ENGINEER
     }
 }

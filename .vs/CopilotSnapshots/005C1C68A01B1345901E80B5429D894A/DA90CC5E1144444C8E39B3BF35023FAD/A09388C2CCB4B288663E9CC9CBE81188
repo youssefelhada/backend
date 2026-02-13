@@ -1,0 +1,37 @@
+﻿namespace visionguard.Models
+{
+    /// <summary>
+    /// Represents a system user (Safety Supervisor or HR staff)
+    /// Workers are NOT users - they are monitored subjects
+    /// </summary>
+    public class User
+    {
+        public int Id { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string EmployeeId { get; set; } = string.Empty;
+        public string Department { get; set; } = string.Empty;
+        
+        /// <summary>
+        /// Role determines dashboard access and permissions
+        /// SAFETY_SUPERVISOR: Can view violations, manage cameras, manage users
+        /// HR: Can view violations, export reports, cannot manage cameras/users
+        /// </summary>
+        public UserRole Role { get; set; }
+        
+        public string? ProfilePicturePath { get; set; }
+        public bool IsActive { get; set; } = true;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? LastLoginAt { get; set; }
+    }
+
+    public enum UserRole
+    {
+        SAFETY_SUPERVISOR,
+        HR,
+        SAFETY_ENGINEER
+    }
+}

@@ -99,22 +99,29 @@ namespace visionguard
             {
                 options.AddPolicy("SupervisorOnly", policy => policy.RequireRole("SAFETY_SUPERVISOR"));
                 options.AddPolicy("HROnly", policy => policy.RequireRole("HR"));
+                options.AddPolicy("EngineerOnly", policy => policy.RequireRole("SAFETY_ENGINEER"));
+                options.AddPolicy("AllAuthenticated", policy => policy.RequireAuthenticatedUser());
             });
 
             // ============================================================
             // DATABASE
             // ============================================================
             builder.Services.AddDbContext<VisionGuardDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions => sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null)
+                ));
 
             // ============================================================
             // BUSINESS SERVICES (تأكد إن الكلاسات دي موجودة)
             // ============================================================
-            // builder.Services.AddScoped<IViolationService, ViolationService>();
-            // builder.Services.AddSingleton(new JwtTokenGenerator(jwtSecret));
-            // builder.Services.AddScoped<visionguard.Repositories.IWorkerRepository, visionguard.Repositories.WorkerRepository>();
-            // builder.Services.AddScoped<IWorkerService, WorkerService>();
-            // builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+            builder.Services.AddScoped<IViolationService, ViolationService>();
+            builder.Services.AddScoped<visionguard.Repositories.IWorkerRepository, visionguard.Repositories.WorkerRepository>();
+            builder.Services.AddScoped<IWorkerService, WorkerService>();
+            builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 
             // ============================================================
             // CORS
@@ -136,6 +143,23 @@ namespace visionguard
             // ============================================================
             // 2. HTTP REQUEST PIPELINE (بعد Build)
             // ============================================================
+            
+            // ✅ Database Seeding
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<VisionGuardDbContext>();
+                    // SeedAsync is defined in Data/DbSeeder.cs
+                    DbSeeder.SeedAsync(context).GetAwaiter().GetResult();
+                    Console.WriteLine("✓ Database seeding completed successfully");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"✗ An error occurred while seeding the database: {ex.Message}");
+                }
+            }
 
             // Swagger شغال في كل البيئات عشان التست
             app.UseSwagger();

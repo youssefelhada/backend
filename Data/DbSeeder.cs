@@ -24,52 +24,13 @@ namespace visionguard.Data
                 throw;
             }
             // Ensure Supervisor user exists (always)
-if (!await context.Users.AnyAsync(u => u.Role == UserRole.SAFETY_SUPERVISOR))
-{
-    var supervisor = new User
-    {
-        Username = "SUP-001",
-        Email = "supervisor@visionguard.local",
-        PasswordHash = BCrypt.Net.BCrypt.HashPassword("1234"), // الباسورد الافتراضي
-        FirstName = "Safety",
-        LastName = "Supervisor",
-        EmployeeId = "SUP-001",
-        Department = "Safety & Compliance",
-        Role = UserRole.SAFETY_SUPERVISOR,
-        IsActive = true,
-        CreatedAt = DateTime.UtcNow
-    };
-
-    await context.Users.AddAsync(supervisor);
-    await context.SaveChangesAsync();
-    Console.WriteLine("✓ Supervisor user added successfully");
-}
-
-            // Check if users already exist
-            if (await context.Users.AnyAsync())
+            if (!await context.Users.AnyAsync(u => u.Username == "SUP-001"))
             {
-                var existingUsers = await context.Users.CountAsync();
-                var existingCameras = await context.Cameras.CountAsync();
-                var existingWorkers = await context.Workers.CountAsync();
-                var existingViolations = await context.Violations.CountAsync();
-                Console.WriteLine($"✓ Database already seeded with demo data:");
-                Console.WriteLine($"  - {existingUsers} users");
-                Console.WriteLine($"  - {existingCameras} cameras");
-                Console.WriteLine($"  - {existingWorkers} workers");
-                Console.WriteLine($"  - {existingViolations} violations");
-                return;
-            }
-
-            // ============================================================
-            // USERS (system users who log in)
-            // ============================================================
-            var users = new List<User>
-            {
-                new User
+                var supervisor = new User
                 {
                     Username = "SUP-001",
                     Email = "supervisor@visionguard.local",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("1234"),
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("1234"), // الباسورد الافتراضي
                     FirstName = "Safety",
                     LastName = "Supervisor",
                     EmployeeId = "SUP-001",
@@ -77,8 +38,17 @@ if (!await context.Users.AnyAsync(u => u.Role == UserRole.SAFETY_SUPERVISOR))
                     Role = UserRole.SAFETY_SUPERVISOR,
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow
-                },
-                new User
+                };
+
+                await context.Users.AddAsync(supervisor);
+                await context.SaveChangesAsync();
+                Console.WriteLine("✓ Supervisor user added successfully");
+            }
+
+            // Ensure HR user exists (do not hard-code engineers)
+            if (!await context.Users.AnyAsync(u => u.Username == "HR-001"))
+            {
+                var hr = new User
                 {
                     Username = "HR-001",
                     Email = "hr@visionguard.local",
@@ -90,111 +60,126 @@ if (!await context.Users.AnyAsync(u => u.Role == UserRole.SAFETY_SUPERVISOR))
                     Role = UserRole.HR,
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow
-                }
-            };
+                };
 
-            await context.Users.AddRangeAsync(users);
-            await context.SaveChangesAsync();
-
-            // ============================================================
-            // CAMERAS (6 cameras across different zones)
-            // ============================================================
-            var cameras = new List<Camera>
-            {
-                new Camera { CameraId = "CAM-001", Zone = "Assembly Line A", Description = "Main assembly floor entrance", IsActive = true, CreatedAt = DateTime.UtcNow },
-                new Camera { CameraId = "CAM-002", Zone = "Assembly Line B", Description = "Secondary assembly floor", IsActive = true, CreatedAt = DateTime.UtcNow },
-                new Camera { CameraId = "CAM-003", Zone = "Welding Station", Description = "Heavy welding and cutting area", IsActive = true, CreatedAt = DateTime.UtcNow },
-                new Camera { CameraId = "CAM-004", Zone = "Chemical Storage", Description = "Chemical handling and storage area", IsActive = true, CreatedAt = DateTime.UtcNow },
-                new Camera { CameraId = "CAM-005", Zone = "Loading Dock", Description = "Inbound/outbound logistics area", IsActive = true, CreatedAt = DateTime.UtcNow },
-                new Camera { CameraId = "CAM-006", Zone = "Maintenance Bay", Description = "Equipment repair and maintenance", IsActive = false, CreatedAt = DateTime.UtcNow }
-            };
-
-            await context.Cameras.AddRangeAsync(cameras);
-            await context.SaveChangesAsync();
-
-            // ============================================================
-            // WORKERS (10 factory workers)
-            // ============================================================
-            var workers = new List<Worker>
-            {
-                new Worker { Name = "Ahmad Hassan", EmployeeId = "EMP-001", CreatedAt = DateTime.UtcNow },
-                new Worker { Name = "Fatima Al-Rashid", EmployeeId = "EMP-002", CreatedAt = DateTime.UtcNow },
-                new Worker { Name = "Omar Said", EmployeeId = "EMP-003", CreatedAt = DateTime.UtcNow },
-                new Worker { Name = "Layla Mahmoud", EmployeeId = "EMP-004", CreatedAt = DateTime.UtcNow },
-                new Worker { Name = "Khalid Ibrahim", EmployeeId = "EMP-005", CreatedAt = DateTime.UtcNow },
-                new Worker { Name = "Sara Ahmed", EmployeeId = "EMP-006", CreatedAt = DateTime.UtcNow },
-                new Worker { Name = "Youssef Nasser", EmployeeId = "EMP-007", CreatedAt = DateTime.UtcNow },
-                new Worker { Name = "Mariam Farouk", EmployeeId = "EMP-008", CreatedAt = DateTime.UtcNow },
-                new Worker { Name = "Ali Khaled", EmployeeId = "EMP-009", CreatedAt = DateTime.UtcNow },
-                new Worker { Name = "Nour El-Din", EmployeeId = "EMP-010", CreatedAt = DateTime.UtcNow }
-            };
-
-            await context.Workers.AddRangeAsync(workers);
-            await context.SaveChangesAsync();
-
-            // ============================================================
-            // VIOLATIONS (40+ violations across the past 3 months)
-            // ============================================================
-            var random = new Random(42); // Deterministic for consistent demo
-            var violations = new List<Violation>();
-            var ppeTypes = new[] { PPEType.HELMET, PPEType.VEST, PPEType.MASK, PPEType.GLOVES };
-            var statuses = new[] { ViolationStatus.PENDING, ViolationStatus.ACKNOWLEDGED, ViolationStatus.RESOLVED };
-
-            // Generate violations for the last 3 months
-            var now = DateTime.UtcNow;
-            for (int monthOffset = 0; monthOffset < 3; monthOffset++)
-            {
-                var month = now.AddMonths(-monthOffset);
-                var daysInMonth = DateTime.DaysInMonth(month.Year, month.Month);
-
-                // 15–20 violations per month
-                var violationsInMonth = random.Next(15, 21);
-                for (int i = 0; i < violationsInMonth; i++)
-                {
-                    var day = random.Next(1, daysInMonth + 1);
-                    var hour = random.Next(6, 18); // Working hours
-                    var detectedAt = new DateTime(month.Year, month.Month, day, hour, random.Next(0, 60), 0, DateTimeKind.Utc);
-
-                    // Don't exceed current date
-                    if (detectedAt > now) continue;
-
-                    var workerId = workers[random.Next(workers.Count)].Id;
-                    var cameraId = cameras[random.Next(cameras.Count - 1)].Id; // Exclude inactive camera
-                    var ppeType = ppeTypes[random.Next(ppeTypes.Length)];
-                    var status = statuses[random.Next(statuses.Length)];
-
-                    // Select a local evidence image based on violation type
-                    var evidenceImage = ppeType switch
-                    {
-                        PPEType.HELMET => (i % 2 == 0) ? "/assets/missingHelmet.png" : "/assets/missingHelmet2.png",
-                        PPEType.VEST => (i % 2 == 0) ? "/assets/missingVest.png" : "/assets/missingVest2.png",
-                        PPEType.MASK => (i % 3 == 0) ? "/assets/missingMask.png" : (i % 3 == 1) ? "/assets/missingMask2.png" : "/assets/missingMask3.png",
-                        _ => "/assets/missingHelmet.png"
-                    };
-
-                    violations.Add(new Violation
-                    {
-                        WorkerId = workerId,
-                        CameraId = cameraId,
-                        ViolationType = ppeType,
-                        EvidenceImageUrl = evidenceImage,
-                        ConfidenceScore = random.Next(70, 99),
-                        DetectedAt = detectedAt,
-                        Status = status,
-                        Notes = status == ViolationStatus.RESOLVED ? "Corrected on-site by supervisor" : null,
-                        CreatedAt = detectedAt
-                    });
-                }
+                await context.Users.AddAsync(hr);
+                await context.SaveChangesAsync();
+                Console.WriteLine("✓ HR user added successfully");
             }
 
-            await context.Violations.AddRangeAsync(violations);
-            await context.SaveChangesAsync();
+            // ============================================================
+            // CAMERAS (seed only if empty)
+            // ============================================================
+            if (!await context.Cameras.AnyAsync())
+            {
+                var cameras = new List<Camera>
+                {
+                    new Camera { CameraId = "CAM-001", Zone = "Assembly Line A", Description = "Main assembly floor entrance", IsActive = true, CreatedAt = DateTime.UtcNow },
+                    new Camera { CameraId = "CAM-002", Zone = "Assembly Line B", Description = "Secondary assembly floor", IsActive = true, CreatedAt = DateTime.UtcNow },
+                    new Camera { CameraId = "CAM-003", Zone = "Welding Station", Description = "Heavy welding and cutting area", IsActive = true, CreatedAt = DateTime.UtcNow },
+                    new Camera { CameraId = "CAM-004", Zone = "Chemical Storage", Description = "Chemical handling and storage area", IsActive = true, CreatedAt = DateTime.UtcNow },
+                    new Camera { CameraId = "CAM-005", Zone = "Loading Dock", Description = "Inbound/outbound logistics area", IsActive = true, CreatedAt = DateTime.UtcNow },
+                    new Camera { CameraId = "CAM-006", Zone = "Maintenance Bay", Description = "Equipment repair and maintenance", IsActive = false, CreatedAt = DateTime.UtcNow }
+                };
+
+                await context.Cameras.AddRangeAsync(cameras);
+                await context.SaveChangesAsync();
+            }
+
+            // ============================================================
+            // WORKERS (seed only if empty)
+            // ============================================================
+            if (!await context.Workers.AnyAsync())
+            {
+                var workers = new List<Worker>
+                {
+                    new Worker { Name = "Ahmad Hassan", EmployeeId = "EMP-001", CreatedAt = DateTime.UtcNow },
+                    new Worker { Name = "Fatima Al-Rashid", EmployeeId = "EMP-002", CreatedAt = DateTime.UtcNow },
+                    new Worker { Name = "Omar Said", EmployeeId = "EMP-003", CreatedAt = DateTime.UtcNow },
+                    new Worker { Name = "Layla Mahmoud", EmployeeId = "EMP-004", CreatedAt = DateTime.UtcNow },
+                    new Worker { Name = "Khalid Ibrahim", EmployeeId = "EMP-005", CreatedAt = DateTime.UtcNow },
+                    new Worker { Name = "Sara Ahmed", EmployeeId = "EMP-006", CreatedAt = DateTime.UtcNow },
+                    new Worker { Name = "Youssef Nasser", EmployeeId = "EMP-007", CreatedAt = DateTime.UtcNow },
+                    new Worker { Name = "Mariam Farouk", EmployeeId = "EMP-008", CreatedAt = DateTime.UtcNow },
+                    new Worker { Name = "Ali Khaled", EmployeeId = "EMP-009", CreatedAt = DateTime.UtcNow },
+                    new Worker { Name = "Nour El-Din", EmployeeId = "EMP-010", CreatedAt = DateTime.UtcNow }
+                };
+
+                await context.Workers.AddRangeAsync(workers);
+                await context.SaveChangesAsync();
+            }
+
+            // ============================================================
+            // VIOLATIONS (seed only if empty)
+            // ============================================================
+            if (!await context.Violations.AnyAsync())
+            {
+                var random = new Random(42); // Deterministic for consistent demo
+                var violations = new List<Violation>();
+                var ppeTypes = new[] { PPEType.HELMET, PPEType.VEST, PPEType.MASK, PPEType.GLOVES };
+                var statuses = new[] { ViolationStatus.PENDING, ViolationStatus.ACKNOWLEDGED, ViolationStatus.RESOLVED };
+
+                // Need current lists for workers and cameras
+                var existingWorkers = await context.Workers.ToListAsync();
+                var existingCameras = await context.Cameras.Where(c => c.IsActive).ToListAsync();
+
+                var now = DateTime.UtcNow;
+                for (int monthOffset = 0; monthOffset < 3; monthOffset++)
+                {
+                    var month = now.AddMonths(-monthOffset);
+                    var daysInMonth = DateTime.DaysInMonth(month.Year, month.Month);
+
+                    var violationsInMonth = random.Next(15, 21);
+                    for (int i = 0; i < violationsInMonth; i++)
+                    {
+                        var day = random.Next(1, daysInMonth + 1);
+                        var hour = random.Next(6, 18);
+                        var detectedAt = new DateTime(month.Year, month.Month, day, hour, random.Next(0, 60), 0, DateTimeKind.Utc);
+                        if (detectedAt > now) continue;
+
+                        var workerId = existingWorkers[random.Next(existingWorkers.Count)].Id;
+                        var cameraId = existingCameras[random.Next(existingCameras.Count)].Id;
+                        var ppeType = ppeTypes[random.Next(ppeTypes.Length)];
+                        var status = statuses[random.Next(statuses.Length)];
+
+                        var evidenceImage = ppeType switch
+                        {
+                            PPEType.HELMET => (i % 2 == 0) ? "/assets/missingHelmet.png" : "/assets/missingHelmet2.png",
+                            PPEType.VEST => (i % 2 == 0) ? "/assets/missingVest.png" : "/assets/missingVest2.png",
+                            PPEType.MASK => (i % 3 == 0) ? "/assets/missingMask.png" : (i % 3 == 1) ? "/assets/missingMask2.png" : "/assets/missingMask3.png",
+                            _ => "/assets/missingHelmet.png"
+                        };
+
+                        violations.Add(new Violation
+                        {
+                            WorkerId = workerId,
+                            CameraId = cameraId,
+                            ViolationType = ppeType,
+                            EvidenceImageUrl = evidenceImage,
+                            ConfidenceScore = random.Next(70, 99),
+                            DetectedAt = detectedAt,
+                            Status = status,
+                            Notes = status == ViolationStatus.RESOLVED ? "Corrected on-site by supervisor" : null,
+                            CreatedAt = detectedAt
+                        });
+                    }
+                }
+
+                await context.Violations.AddRangeAsync(violations);
+                await context.SaveChangesAsync();
+            }
+
+            // Final counts
+            var totalUsers = await context.Users.CountAsync();
+            var totalCameras = await context.Cameras.CountAsync();
+            var totalWorkers = await context.Workers.CountAsync();
+            var totalViolations = await context.Violations.CountAsync();
 
             Console.WriteLine($"✓ Database seeded with demo data:");
-            Console.WriteLine($"  - {users.Count} users (SUP-001, HR-001)");
-            Console.WriteLine($"  - {cameras.Count} cameras");
-            Console.WriteLine($"  - {workers.Count} workers");
-            Console.WriteLine($"  - {violations.Count} violations");
+            Console.WriteLine($"  - {totalUsers} users");
+            Console.WriteLine($"  - {totalCameras} cameras");
+            Console.WriteLine($"  - {totalWorkers} workers");
+            Console.WriteLine($"  - {totalViolations} violations");
         }
     }
 }

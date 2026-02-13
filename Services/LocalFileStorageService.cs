@@ -51,7 +51,8 @@ namespace visionguard.Services
                 var uniqueFileName = $"{Guid.NewGuid()}{extension}";
 
                 // Create directory path
-                var uploadsPath = Path.Combine(_environment.WebRootPath, UploadsFolder, folder);
+                var rootPath = _environment.WebRootPath ?? Path.Combine(_environment.ContentRootPath, "wwwroot");
+                var uploadsPath = Path.Combine(rootPath, UploadsFolder, folder);
                 
                 if (!Directory.Exists(uploadsPath))
                 {

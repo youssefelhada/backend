@@ -1,0 +1,52 @@
+﻿namespace visionguard.DTOs
+{
+    /// <summary>
+    /// RESPONSE: User for system access management
+    /// Displayed on Engineers & Users page (Supervisor only)
+    /// </summary>
+    public class UserDto
+    {
+        public int Id { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string EmployeeId { get; set; } = string.Empty;
+        public string Department { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;  // "SAFETY_SUPERVISOR", "HR", or "SAFETY_ENGINEER"
+        public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? LastLoginAt { get; set; }
+    }
+
+    /// <summary>
+    /// REQUEST: Create new system user
+    /// Mobile app admin creates new accounts with different roles
+    /// Roles: SAFETY_SUPERVISOR (admin), HR (reports), SAFETY_ENGINEER (field engineer)
+    /// </summary>
+    public class CreateUserRequest
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string EmployeeId { get; set; } = string.Empty;
+        public string Department { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;  // "SAFETY_SUPERVISOR", "HR", or "SAFETY_ENGINEER"
+        public string Password { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// REQUEST: Update user information
+    /// Supervisor/Admin can update user details and role
+    /// </summary>
+    public class UpdateUserRequest
+    {
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Email { get; set; }
+        public string? Department { get; set; }
+        public string? Role { get; set; }  // "SAFETY_SUPERVISOR", "HR", or "SAFETY_ENGINEER"
+        public bool? IsActive { get; set; }
+    }
+}
